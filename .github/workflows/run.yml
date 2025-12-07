@@ -20,6 +20,9 @@ jobs:
           disk-cache: ${{ github.workflow }}
           repository-cache: true
 
+      - name: install clang
+        run: sudo apt update && sudo apt install -y clang-20 mold
+
       - name: run
         run: |
-          bazel run --config=asan //app:usage
+          bazel run --config=asan --config=ci //app:usage
