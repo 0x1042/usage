@@ -8,7 +8,7 @@ build:local --action_env=LLVM_CONFIG=/usr/local/opt/llvm@20/bin/llvm-config
 build:ci --action_env=CC=/usr/bin/clang-20
 build:ci --action_env=CXX=/usr/bin/clang++-20
 build:ci --action_env=LLVM_CONFIG=/usr/bin/llvm-config-20
-build:ci --cxxopt=-fuse-ld=mold
+
 build:ci --linkopt=-fuse-ld=mold
 build:ci --host_cxxopt=-fuse-ld=mold
 
