@@ -1,0 +1,43 @@
+ExcludeHeaderFilterRegex: ".*\/external\/.*"
+
+Checks: >
+      bugprone-*,
+      modernize-*,
+      performance-*,
+      readability-*,
+      cppcoreguidelines-*,
+      abseil-*,
+      clang-analyzer-core.*,
+      -readability-magic-numbers,
+      -cppcoreguidelines-avoid-magic-numbers,
+
+WarningsAsErrors: "*"
+
+ExtraArgs:
+      - "-Wno-unknown-pragmas"
+      - "-Wno-unused-command-line-argument" # similar issue
+
+CheckOptions:
+      readability-identifier-naming.ClassCase: CamelCase
+      readability-identifier-naming.EnumCase: CamelCase
+      readability-identifier-naming.LocalVariableCase: lower_case
+      readability-identifier-naming.StaticConstantCase: aNy_CasE
+      readability-identifier-naming.MemberCase: lower_case
+      readability-identifier-naming.PrivateMemberPrefix: ""
+      readability-identifier-naming.PrivateMemberSuffix: "_"
+      readability-identifier-naming.ProtectedMemberPrefix: ""
+      readability-identifier-naming.PublicMemberCase: lower_case
+      readability-identifier-naming.MethodCase: camelBack
+      readability-identifier-naming.PrivateMethodPrefix: ""
+      readability-identifier-naming.ProtectedMethodPrefix: ""
+      readability-identifier-naming.ParameterPackCase: lower_case
+      readability-identifier-naming.StructCase: CamelCase
+      readability-identifier-naming.TemplateTemplateParameterCase: CamelCase
+      readability-identifier-naming.TemplateParameterCase: lower_case
+      readability-identifier-naming.TypeTemplateParameterCase: CamelCase
+      readability-identifier-naming.TypedefCase: CamelCase
+      readability-identifier-naming.UnionCase: CamelCase
+      readability-identifier-naming.TypeTemplateParameterIgnoredRegexp: expr-type
+      modernize-loop-convert.UseCxx20ReverseRanges: false
+      performance-move-const-arg.CheckTriviallyCopyableMove: true
+      cppcoreguidelines-avoid-do-while.IgnoreMacros: true

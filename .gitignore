@@ -1,0 +1,8 @@
+.cache
+bazel-out
+bazel-bin
+bazel-testlogs
+bazel-usage
+external
+compile_commands.json
+MODULE.bazel.lock

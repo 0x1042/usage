@@ -1,0 +1,20 @@
+load("@rules_cc//cc:defs.bzl", "cc_test")
+load("//app:copts.bzl", "DEFAULT_COPTS")
+
+cc_test(
+    name = "usage",
+    srcs = [
+        "format.cc",
+        "main.cc",
+    ],
+    copts = DEFAULT_COPTS,
+    deps = [
+        "@abseil-cpp//absl/flags:flag",
+        "@abseil-cpp//absl/flags:parse",
+        "@abseil-cpp//absl/log:flags",
+        "@abseil-cpp//absl/log:globals",
+        "@abseil-cpp//absl/log:initialize",
+        "@abseil-cpp//absl/log:log",
+        "@googletest//:gtest",
+    ],
+)
