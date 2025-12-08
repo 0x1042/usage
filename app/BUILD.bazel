@@ -1,14 +1,55 @@
-load("@rules_cc//cc:defs.bzl", "cc_test")
+load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 load("//app:copts.bzl", "DEFAULT_COPTS")
+
+cc_library(
+    name = "http",
+    srcs = [
+        "http.cc",
+    ],
+    hdrs = [
+        "http.h",
+    ],
+    copts = DEFAULT_COPTS,
+    defines = [
+        "CPPHTTPLIB_OPENSSL_SUPPORT",
+    ],
+    deps = [
+        "@abseil-cpp//absl/log:log",
+        "@cpp-httplib//:httplib",
+        "@cpr",
+    ],
+)
+
+cc_library(
+    name = "compressor",
+    srcs = [
+        "compressor.cc",
+    ],
+    hdrs = [
+        "compressor.h",
+    ],
+    copts = DEFAULT_COPTS,
+    deps = [
+        "@lz4",
+        "@lz4//:lz4_hc",
+        "@snappy",
+        "@zstd",
+    ],
+)
 
 cc_test(
     name = "usage",
     srcs = [
+        "comp.cc",
         "format.cc",
+        "get.cc",
+        "json.cc",
         "main.cc",
     ],
     copts = DEFAULT_COPTS,
     deps = [
+        ":compressor",
+        ":http",
         "@abseil-cpp//absl/flags:flag",
         "@abseil-cpp//absl/flags:parse",
         "@abseil-cpp//absl/log:flags",
@@ -16,5 +57,6 @@ cc_test(
         "@abseil-cpp//absl/log:initialize",
         "@abseil-cpp//absl/log:log",
         "@googletest//:gtest",
+        "@rapidjson",
     ],
 )
