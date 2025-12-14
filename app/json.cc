@@ -6,8 +6,33 @@
 #include "absl/log/log.h"
 #include "gtest/gtest.h"
 #include "rapidjson/document.h"
+#include "rapidjson/pointer.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
+
+template <typename T>
+auto get_pointer(const rapidjson::Document& doc, const char* path) -> std::optional<T> {
+    const rapidjson::Value* value = rapidjson::Pointer(path).Get(doc);
+    if (!value) {
+        return std::nullopt;
+    }
+
+    if constexpr (std::is_same_v<T, std::string> || std::is_same_v<T, std::string_view>) {
+        return value->IsString() ? std::optional<T>{value->GetString()} : std::nullopt;
+    } else if constexpr (std::is_same_v<T, int>) {
+        return value->IsInt() ? std::optional<T>{value->GetInt()} : std::nullopt;
+    } else if constexpr (std::is_same_v<T, int64_t>) {
+        return value->IsInt64() ? std::optional<T>{value->GetInt64()} : std::nullopt;
+    } else if constexpr (std::is_same_v<T, uint64_t>) {
+        return value->IsUint64() ? std::optional<T>{value->GetUint64()} : std::nullopt;
+    } else if constexpr (std::is_floating_point_v<T>) {
+        return value->IsDouble() ? std::optional<T>{value->GetDouble()} : std::nullopt;
+    } else if constexpr (std::is_same_v<T, bool>) {
+        return value->IsBool() ? std::optional<T>{value->GetBool()} : std::nullopt;
+    } else {
+        static_assert(false, "Unsupported type");
+    }
+}
 
 template <typename T>
 void settter(rapidjson::Document& doc, std::string_view key, const T& target) {
@@ -60,11 +85,32 @@ struct Item {
         doc.Accept(writer);
         return buffer.GetString();
     }
+
+    Item() = default;
+
+    explicit Item(const std::string& json) {
+        rapidjson::Document doc;
+        doc.Parse(json.data());
+
+        if (doc.HasParseError()) {
+            return;
+        }
+    }
 };
 } // namespace json
 
 TEST(tojson, tojson) {
-    json::Item item = {.id = 1024, .score = 3.14, .coef = 2.1, .boost = 2,.enable = true};
+    json::Item item;
+    item.id = 1024;
+    item.score = 3.14;
+    item.coef = 2.1;
+    item.boost = 2;
+    item.enable = true;
+    LOG(INFO) << item.toStr();
+}
+
+TEST(tojson, fromjson) {
+    json::Item item;
 
     LOG(INFO) << item.toStr();
 }

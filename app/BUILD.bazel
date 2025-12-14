@@ -20,6 +20,25 @@ cc_library(
     ],
 )
 
+
+cc_library(
+    name = "meta",
+    srcs = [
+        "meta.cc",
+    ],
+    hdrs = [
+        "meta.h",
+    ],
+    copts = DEFAULT_COPTS,
+    defines = [
+        "CPPHTTPLIB_OPENSSL_SUPPORT",
+    ],
+    deps = [
+        "@abseil-cpp//absl/log:log",
+        "@cpuinfo",
+    ],
+)
+
 cc_library(
     name = "compressor",
     srcs = [
@@ -45,17 +64,26 @@ cc_test(
         "get.cc",
         "json.cc",
         "main.cc",
+        "meta_test.cc",
+        "time.cc",
+        "strings.cc",
+        "random.cc",
     ],
     copts = DEFAULT_COPTS,
     deps = [
         ":compressor",
         ":http",
+        ":meta",
         "@abseil-cpp//absl/flags:flag",
         "@abseil-cpp//absl/flags:parse",
         "@abseil-cpp//absl/log:flags",
         "@abseil-cpp//absl/log:globals",
         "@abseil-cpp//absl/log:initialize",
         "@abseil-cpp//absl/log:log",
+        "@abseil-cpp//absl/random:random",
+        "@abseil-cpp//absl/time:time",
+        "@abseil-cpp//absl/strings:strings",
+        "@cpuinfo",
         "@googletest//:gtest",
         "@rapidjson",
     ],
