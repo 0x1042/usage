@@ -3,17 +3,17 @@ Language: Cpp
 AlignAfterOpenBracket: AlwaysBreak
 BreakBeforeBraces: Attach
 BraceWrapping:
-  AfterClass: true
-  AfterControlStatement: "true"
-  AfterEnum: true
-  AfterFunction: true
-  AfterNamespace: true
-  AfterStruct: true
-  AfterUnion: true
-  BeforeCatch: true
-  BeforeElse: true
-  BeforeLambdaBody: true
-  IndentBraces: false
+    AfterClass: true
+    AfterControlStatement: "true"
+    AfterEnum: true
+    AfterFunction: true
+    AfterNamespace: true
+    AfterStruct: true
+    AfterUnion: true
+    BeforeCatch: true
+    BeforeElse: true
+    BeforeLambdaBody: true
+    IndentBraces: false
 BreakConstructorInitializersBeforeComma: false
 Cpp11BracedListStyle: true
 ColumnLimit: 120
@@ -33,23 +33,23 @@ SpaceBeforeCpp11BracedList: false
 SortIncludes: CaseSensitive
 IndentPPDirectives: AfterHash
 IncludeCategories:
-  - Regex: "^<[a-z_]+>"
-    Priority: 1
-  - Regex: "^<[a-z_]+.h>"
-    Priority: 2
-  - Regex: '^["<](common|ext|mysqlxx|daemon|zkutil)/'
-    Priority: 90
-  - Regex: '^["<](DB)/'
-    Priority: 100
-  - Regex: '^["<](Poco)/'
-    Priority: 50
-  - Regex: '^"'
-    Priority: 110
-  - Regex: "/"
-    Priority: 30
-  - Regex: ".*"
-    Priority: 40
-ReflowComments: false
+    - Regex: "^<[a-z_]+>"
+      Priority: 1
+    - Regex: "^<[a-z_]+.h>"
+      Priority: 2
+    - Regex: '^["<](common|ext|mysqlxx|daemon|zkutil)/'
+      Priority: 90
+    - Regex: '^["<](DB)/'
+      Priority: 100
+    - Regex: '^["<](Poco)/'
+      Priority: 50
+    - Regex: '^"'
+      Priority: 110
+    - Regex: "/"
+      Priority: 30
+    - Regex: ".*"
+      Priority: 40
+ReflowComments: Never
 AlignEscapedNewlines: DontAlign
 AlignTrailingComments: false
 
@@ -58,7 +58,7 @@ AccessModifierOffset: -4
 AlignConsecutiveAssignments: false
 AlignOperands: false
 AllowAllParametersOfDeclarationOnNextLine: true
-AllowShortBlocksOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: false
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false

@@ -7,11 +7,11 @@
 TEST(get, cpr) {
     std::string url = "https://tool.lu";
     auto&& rsp = get_with_cpr(url);
-    LOG(INFO) << "cpr rsp is " << rsp;
+    LOG(INFO) << "cpr rsp length is " << rsp.length();
 }
 
 TEST(get, lib) {
     std::string url = "https://tool.lu";
     auto&& rsp = get_with_httplib(url);
-    LOG(INFO) << "httplib rsp is " << rsp;
+    LOG(INFO) << "httplib rsp length is " << rsp.length();
 }

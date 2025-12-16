@@ -1,7 +1,7 @@
 #include "http.h"
 
 #include "absl/log/log.h"
-#include "cpr/cpr.h"
+#include "cpr/api.h"
 #include "httplib.h"
 
 auto get_with_cpr(const std::string& url) -> std::string {

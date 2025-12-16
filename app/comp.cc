@@ -13,7 +13,14 @@ class CompressorTest : public ::testing::Test {
 public:
     void SetUp() override {
         const auto& bin_dir = std::getenv("BUILD_WORKING_DIRECTORY");
-        const auto& path = std::format("{}/{}", bin_dir, "MODULE.bazel.lock");
+
+        std::string pwd = ".";
+        if (bin_dir != nullptr) {
+            pwd = std::string(bin_dir);
+        }
+
+        LOG(INFO) << "pwd dir " << pwd;
+        const auto& path = std::format("{}/{}", pwd, "MODULE.bazel.lock");
         std::ifstream file(path, std::ios::binary);
         if (!file.is_open()) {
             throw std::runtime_error("invalid path");
