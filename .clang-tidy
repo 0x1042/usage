@@ -10,6 +10,7 @@ Checks: >
     clang-analyzer-core.*,
     -readability-magic-numbers,
     -cppcoreguidelines-avoid-magic-numbers,
+    -cppcoreguidelines-non-private-member-variables-in-classes,
 
 WarningsAsErrors: "*"
 
@@ -21,6 +22,7 @@ CheckOptions:
     readability-identifier-naming.MemberCase: lower_case
     readability-identifier-naming.PrivateMemberPrefix: ""
     readability-identifier-naming.PrivateMemberSuffix: "_"
+    readability-identifier-naming.ProtectedMemberSuffix: "_"
     readability-identifier-naming.ProtectedMemberPrefix: ""
     readability-identifier-naming.PublicMemberCase: lower_case
     readability-identifier-naming.MethodCase: camelBack
