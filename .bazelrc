@@ -18,7 +18,7 @@ build:dbg --compilation_mode=dbg
 
 build:opt --compilation_mode=opt
 build:opt --copt=-O3
-build:opt --strip=always
+# build:opt --strip=always
 build:opt --features=thin_lto
 
 # .bazelrc

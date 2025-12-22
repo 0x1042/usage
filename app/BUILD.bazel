@@ -20,7 +20,6 @@ cc_library(
     ],
 )
 
-
 cc_library(
     name = "meta",
     srcs = [
@@ -65,9 +64,10 @@ cc_test(
         "json.cc",
         "main.cc",
         "meta_test.cc",
-        "time.cc",
-        "strings.cc",
         "random.cc",
+        "strings.cc",
+        "time.cc",
+        "task.cc",
     ],
     copts = DEFAULT_COPTS,
     deps = [
@@ -80,11 +80,17 @@ cc_test(
         "@abseil-cpp//absl/log:globals",
         "@abseil-cpp//absl/log:initialize",
         "@abseil-cpp//absl/log:log",
+        "@abseil-cpp//absl/cleanup:cleanup",
         "@abseil-cpp//absl/random:random",
-        "@abseil-cpp//absl/time:time",
+        "@abseil-cpp//absl/synchronization:synchronization",
         "@abseil-cpp//absl/strings:strings",
+        "@abseil-cpp//absl/time:time",
+        "@civetweb",
         "@cpuinfo",
+        "@curl",
         "@googletest//:gtest",
+        # "@poco//:PocoFoundation",
+        # "@poco//:PocoNet",
         "@rapidjson",
     ],
 )
