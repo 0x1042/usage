@@ -5,8 +5,9 @@
 
 #include "absl/log/log.h"
 #include "absl/synchronization/notification.h"
-#include "gmock/gmock.h"
+#include "exec/static_thread_pool.hpp"
 #include "gtest/gtest.h"
+#include "stdexec/execution.hpp"
 
 class BgTaskStd {
 public:
@@ -138,4 +139,19 @@ TEST(BgTaskStdTest, StopsCleanly) {
         absl::SleepFor(absl::Milliseconds(100));
     }
     SUCCEED();
+}
+
+TEST(exec, exec) {
+    exec::static_thread_pool pool(3);
+
+    auto sched = pool.get_scheduler();
+
+    auto fun = [](int i) -> int { return i * i; };
+    auto work = stdexec::when_all(
+        stdexec::starts_on(sched, stdexec::just(0) | stdexec::then(fun)),
+        stdexec::starts_on(sched, stdexec::just(1) | stdexec::then(fun)),
+        stdexec::starts_on(sched, stdexec::just(2) | stdexec::then(fun)));
+
+    auto [i, j, k] = stdexec::sync_wait(std::move(work)).value();
+    LOG(INFO) << "i = " << i << " j = " << j << " k = " << k;
 }
