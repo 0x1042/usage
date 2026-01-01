@@ -9,14 +9,17 @@ build:ci --action_env=CC=/usr/bin/clang-20
 build:ci --action_env=CXX=/usr/bin/clang++-20
 build:ci --action_env=LLVM_CONFIG=/usr/bin/llvm-config-20
 
-build:ci --bes_results_url=https://app.buildbuddy.io/invocation/
-build:ci --bes_backend=grpcs://remote.buildbuddy.io
-build:ci --remote_cache=grpcs://remote.buildbuddy.io
-build:ci --remote_timeout=10m
+# build:ci --cxxopt=-stdlib=libc++
+# build:ci --linkopt=-stdlib=libc++
+# build:ci --linkopt=-lc++
+# build:ci --linkopt=-lc++abi
+# build:ci --linkopt=-lm
+# build:ci --linkopt=-lpthread
+# build:ci --linkopt=-L/usr/lib/llvm-20/lib
+# build:ci --linkopt=-L/usr/lib/x86_64-linux-gnu
 
 build:ci --linkopt=-fuse-ld=mold
 build:ci --host_cxxopt=-fuse-ld=mold
-
 common --cxxopt=-std=c++20
 
 build:dbg --compilation_mode=dbg
