@@ -23,6 +23,10 @@ jobs:
       - name: install clang
         run: sudo apt update && sudo apt install -y clang-20 mold
 
+      - name: build
+        run: |
+          bazel build --config=asan --config=ci --remote_header=x-buildbuddy-api-key=${{ secrets.BUILDBUDDY_ORG_API_KEY }} //app:usage
+
       - name: run
         run: |
-          bazel run --config=asan --config=ci //app:usage
+          ./bazel-bin/app/usage
