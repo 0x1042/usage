@@ -6,13 +6,13 @@
 #include "http.h"
 
 TEST(get, cpr) {
-    std::string url = "https://tool.lu";
+    std::string url = "https://www.baidu.com";
     auto&& rsp = get_with_cpr(url);
     LOG(INFO) << "cpr rsp length is " << rsp.length();
 }
 
 TEST(get, lib) {
-    std::string url = "https://tool.lu";
+    std::string url = "https://www.baidu.com";
     auto&& rsp = get_with_httplib(url);
     LOG(INFO) << "httplib rsp length is " << rsp.length();
 }
@@ -31,7 +31,7 @@ TEST(get, curl) {
 
     LOG(INFO) << curl_version();
 
-    curl_easy_setopt(curl, CURLOPT_URL, "https://tool.lu");
+    curl_easy_setopt(curl, CURLOPT_URL, "https://www.baidu.com");
     std::string response;
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);

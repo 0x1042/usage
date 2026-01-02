@@ -49,7 +49,7 @@ IncludeCategories:
       Priority: 30
     - Regex: ".*"
       Priority: 40
-ReflowComments: Never
+      
 AlignEscapedNewlines: DontAlign
 AlignTrailingComments: false
 

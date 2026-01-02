@@ -1,5 +1,8 @@
+"""
+common copts and lint opts
+"""
 DEFAULT_COPTS = [
-    "-std=c++20",
+    "-std=c++23",
     "-Wall",
     "-Wextra",
     "-Werror",

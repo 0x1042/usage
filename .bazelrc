@@ -1,26 +1,23 @@
 common --enable_platform_specific_config
 common --verbose_failures
+common --cxxopt=-std=c++23
 
 build:local --action_env=CC=/usr/local/opt/llvm@20/bin/clang
 build:local --action_env=CXX=/usr/local/opt/llvm@20/bin/clang
 build:local --action_env=LLVM_CONFIG=/usr/local/opt/llvm@20/bin/llvm-config
+build:local --cxxopt=-stdlib=libc++
+build:local --linkopt=-stdlib=libc++
+build:local --linkopt=-lc++
+build:local --linkopt=-lc++abi
+build:local --linkopt=-lm
+build:local --linkopt=-lpthread
 
 build:ci --action_env=CC=/usr/bin/clang-20
 build:ci --action_env=CXX=/usr/bin/clang++-20
 build:ci --action_env=LLVM_CONFIG=/usr/bin/llvm-config-20
 
-# build:ci --cxxopt=-stdlib=libc++
-# build:ci --linkopt=-stdlib=libc++
-# build:ci --linkopt=-lc++
-# build:ci --linkopt=-lc++abi
-# build:ci --linkopt=-lm
-# build:ci --linkopt=-lpthread
-# build:ci --linkopt=-L/usr/lib/llvm-20/lib
-# build:ci --linkopt=-L/usr/lib/x86_64-linux-gnu
-
 build:ci --linkopt=-fuse-ld=mold
 build:ci --host_cxxopt=-fuse-ld=mold
-common --cxxopt=-std=c++20
 
 build:dbg --compilation_mode=dbg
 

@@ -5,6 +5,43 @@
 #include <string>
 #include <vector>
 
+template <typename F>
+class DeferredAction {
+public:
+    DeferredAction(F&& fn) noexcept : fn_(std::move(fn)) {}
+    DeferredAction(DeferredAction&& other) noexcept : fn_(std::move(other.fn_)), cancelled_(other.cancelled_) {
+        other.cancelled_ = true;
+    }
+
+    auto operator=(DeferredAction&& o) noexcept -> DeferredAction& {
+        if (this != &o) {
+            this->~DeferredAction();
+            new (this) DeferredAction(std::move(o));
+        }
+        return *this;
+    }
+
+    auto operator=(const DeferredAction&) -> DeferredAction& = delete;
+    DeferredAction(const DeferredAction&) = delete;
+
+    ~DeferredAction() {
+        if (!cancelled_) {
+            fn_();
+        };
+    }
+
+    void cancel() { cancelled_ = true; }
+
+private:
+    F fn_;
+    bool cancelled_ = false;
+};
+
+template <typename F>
+inline auto defer(F&& fn) -> DeferredAction<F> {
+    return DeferredAction<F>(std::forward<F>(fn));
+}
+
 struct CpuInfo {
     std::string name;
     uint16_t processors = 0;

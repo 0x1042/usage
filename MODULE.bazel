@@ -22,7 +22,6 @@ bazel_dep(name = "cpuinfo", version = "0.0.0-20250925-877328f")
 bazel_dep(name = "civetweb", version = "1.16.bcr.3")
 bazel_dep(name = "stdexec", version = "5d9f3bfb032e9d71b2292b7add7d90cbf9d037a9")
 bazel_dep(name = "nsync", version = "1.29.2")
-
 bazel_dep(name = "compilation_database", version = "0.2.0")
 git_override(
     module_name = "compilation_database",
@@ -31,4 +30,4 @@ git_override(
 )
 
 go_sdk = use_extension("@rules_go//go:extensions.bzl", "go_sdk")
-# go_sdk.host()
+go_sdk.host()
