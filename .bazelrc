@@ -17,9 +17,10 @@ build --bes_backend=grpcs://remote.buildbuddy.io
 build --remote_cache=grpcs://remote.buildbuddy.io
 build --remote_timeout=20m
 build --noslim_profile 
-build --experimental_remote_cache_compression
+build --remote_cache_compression
 build --experimental_profile_include_target_label 
 build --experimental_profile_include_primary_output 
+build --compilation_mode=dbg
 
 build:ci --action_env=CC=/usr/bin/clang-20
 build:ci --action_env=CXX=/usr/bin/clang++-20
@@ -27,8 +28,6 @@ build:ci --action_env=LLVM_CONFIG=/usr/bin/llvm-config-20
 
 build:ci --linkopt=-fuse-ld=mold
 build:ci --host_cxxopt=-fuse-ld=mold
-
-build:dbg --compilation_mode=dbg
 
 build:opt --compilation_mode=opt
 build:opt --copt=-O3
