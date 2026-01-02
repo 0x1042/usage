@@ -5,7 +5,6 @@ common --cxxopt=-std=c++23
 build:local --action_env=CC=/usr/local/opt/llvm@20/bin/clang
 build:local --action_env=CXX=/usr/local/opt/llvm@20/bin/clang
 build:local --action_env=LLVM_CONFIG=/usr/local/opt/llvm@20/bin/llvm-config
-build:local --cxxopt=-stdlib=libc++
 build:local --linkopt=-stdlib=libc++
 build:local --linkopt=-lc++
 build:local --linkopt=-lc++abi

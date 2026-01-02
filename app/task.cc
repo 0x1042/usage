@@ -130,7 +130,7 @@ TEST(BgWithAbslTest, StopsCleanly) {
 
 TEST(BgTaskStdTest, CallsRunPeriodically) {
     MockBgTask2 task;
-    absl::SleepFor(absl::Seconds(2.5));
+    absl::SleepFor(absl::Seconds(1));
 }
 
 TEST(BgTaskStdTest, StopsCleanly) {
@@ -152,6 +152,6 @@ TEST(exec, exec) {
         stdexec::starts_on(sched, stdexec::just(1) | stdexec::then(fun)),
         stdexec::starts_on(sched, stdexec::just(2) | stdexec::then(fun)));
 
-    auto [i, j, k] = stdexec::sync_wait(std::move(work)).value();
+    auto [i, j, k] = stdexec::sync_wait(work).value();
     LOG(INFO) << "i = " << i << " j = " << j << " k = " << k;
 }

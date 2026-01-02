@@ -4,7 +4,6 @@
 #include <source_location>
 #include <string>
 #include <string_view>
-#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -13,9 +12,9 @@
 
 TEST(fmt, format) {
     std::string_view world = "world";
-    LOG(INFO) << std::format("Hello, {}", world);
-    LOG(INFO) << std::format("{1}, {0}!", "world", "hello");
-    LOG(INFO) << "PI is " << std::format("{:.3f}", std::numbers::pi);
+    EXPECT_EQ(std::format("Hello, {}", world), "Hello, world");
+    EXPECT_EQ(std::format("{1}, {0}!", "world", "hello"), "hello, world!");
+    EXPECT_EQ(std::format("{:.3f}", std::numbers::pi), "3.142");
 }
 
 struct Tag {
@@ -63,7 +62,7 @@ struct std::formatter<std::vector<Tag>> : RangeFormatter<std::vector<Tag>> {};
 
 TEST(fmt, formatTag) {
     Tag tag = {.key = "hello", .val = "world"};
-    LOG(INFO) << "tag info: " << std::format("tag is {}", tag);
+    EXPECT_EQ(std::format("tag is {}", tag), "tag is (hello -> world)");
 }
 
 TEST(fmt, formatTags) {
