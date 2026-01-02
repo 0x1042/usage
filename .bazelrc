@@ -12,6 +12,15 @@ build:local --linkopt=-lc++abi
 build:local --linkopt=-lm
 build:local --linkopt=-lpthread
 
+build --bes_results_url=https://app.buildbuddy.io/invocation/
+build --bes_backend=grpcs://remote.buildbuddy.io
+build --remote_cache=grpcs://remote.buildbuddy.io
+build --remote_timeout=20m
+build --noslim_profile 
+build --experimental_remote_cache_compression
+build --experimental_profile_include_target_label 
+build --experimental_profile_include_primary_output 
+
 build:ci --action_env=CC=/usr/bin/clang-20
 build:ci --action_env=CXX=/usr/bin/clang++-20
 build:ci --action_env=LLVM_CONFIG=/usr/bin/llvm-config-20
@@ -81,3 +90,5 @@ build:msan --linkopt=-fsanitize=memory
 # export TSAN_OPTIONS="halt_on_error=1:history_size=7:second_deadlock_stack=1"
 # 对于 UBSan
 # export UBSAN_OPTIONS="halt_on_error=1:print_stacktrace=1"
+
+try-import %workspace%/local.bazelrc

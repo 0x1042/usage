@@ -8,3 +8,4 @@ compile_commands.json
 MODULE.bazel.lock
 .idea
 log
+local.bazelrc
