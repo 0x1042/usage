@@ -88,8 +88,6 @@ cc_test(
         "@abseil-cpp//absl/strings:strings",
         "@abseil-cpp//absl/synchronization:synchronization",
         "@abseil-cpp//absl/time:time",
-        "@civetweb",
-        "@cpr",
         "@cpuinfo",
         "@curl",
         "@googletest//:gtest",

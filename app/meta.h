@@ -1,9 +1,18 @@
 #pragma once
 
+#include <algorithm>
 #include <cstdint>
+#include <cstring>
 #include <format>
+#include <iomanip>
+#include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
+
+#include <unistd.h>
+
+#include <sys/utsname.h>
 
 template <typename F>
 class DeferredAction {
@@ -85,4 +94,22 @@ struct std::formatter<CpuInfo> {
         }
         return std::format_to(out, "]\n");
     }
+};
+
+struct EnvInfo {
+    std::string sysname;
+    std::string release;
+    std::string version;
+    std::string machine;
+    pid_t pid;
+
+    struct DiskInfo {
+        uint64_t capacity = 0;
+        uint64_t free = 0;
+        uint64_t available = 0;
+    } disk_info;
+
+    EnvInfo();
+
+    [[nodiscard]] auto toStr() const -> std::string;
 };
