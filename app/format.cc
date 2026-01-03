@@ -72,7 +72,10 @@ TEST(fmt, formatTags) {
         tags.emplace_back(tag);
     }
 
-    LOG(INFO) << "tags info: " << std::format("tags is {}", tags);
+    EXPECT_EQ(
+        "[(0 -> 1), (1 -> 2), (2 -> 3), (3 -> 4), (4 -> 5), (5 -> 6), (6 -> 7), (7 -> 8), (8 -> "
+        "9), (9 -> 10)]",
+        std::format("{}", tags));
 }
 
 struct Item {
@@ -110,7 +113,7 @@ TEST(fmt, formatItem) {
 }
 
 template <typename... Args>
-void log_impl(const std::string& fmt, Args&&... args) {
+void log_impl(const std::string& fmt, Args&&... args) { // NOLINT
     auto fmt_args = std::make_format_args(args...);
     std::string out = std::vformat(fmt, fmt_args);
     std::cout << "[LOG] " << out << '\n';

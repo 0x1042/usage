@@ -1,9 +1,4 @@
 #include <cstdlib>
-#include <format>
-#include <fstream>
-#include <ios>
-#include <iterator>
-#include <stdexcept>
 
 #include "absl/log/log.h"
 #include "compressor.h"
@@ -12,20 +7,11 @@
 class CompressorTest : public ::testing::Test {
 public:
     void SetUp() override {
-        const auto& bin_dir = std::getenv("BUILD_WORKING_DIRECTORY");
+        const auto& bin_dir = std::getenv("PATH");
 
-        std::string pwd = ".";
         if (bin_dir != nullptr) {
-            pwd = std::string(bin_dir);
+            origin = std::string(bin_dir);
         }
-
-        LOG(INFO) << "pwd dir " << pwd;
-        const auto& path = std::format("{}/{}", pwd, "MODULE.bazel.lock");
-        std::ifstream file(path, std::ios::binary);
-        if (!file.is_open()) {
-            throw std::runtime_error("invalid path");
-        }
-        origin = {(std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>()};
         LOG(INFO) << "origin size is " << origin.size();
     }
 

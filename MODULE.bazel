@@ -20,6 +20,7 @@ bazel_dep(name = "curl", version = "8.8.0.bcr.3")
 bazel_dep(name = "cpp-httplib", version = "0.22.0")
 bazel_dep(name = "cpuinfo", version = "0.0.0-20250925-877328f")
 bazel_dep(name = "stdexec", version = "5d9f3bfb032e9d71b2292b7add7d90cbf9d037a9")
+bazel_dep(name = "protobuf", version = "33.2")
 bazel_dep(name = "compilation_database", version = "0.2.0")
 git_override(
     module_name = "compilation_database",

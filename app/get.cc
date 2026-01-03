@@ -1,17 +1,19 @@
 #include <string>
 
 #include "absl/log/log.h"
+#include "cpr/api.h"
+#include "cpr/ssl_options.h"
 #include "curl/curl.h"
 #include "gtest/gtest.h"
 #include "http.h"
 
-TEST(get, cpr) {
+TEST(HTTP, cpr) {
     std::string url = "https://www.baidu.com";
     auto&& rsp = get_with_cpr(url);
     LOG(INFO) << "cpr rsp length is " << rsp.length();
 }
 
-TEST(get, lib) {
+TEST(HTTP, lib) {
     std::string url = "https://www.baidu.com";
     auto&& rsp = get_with_httplib(url);
     LOG(INFO) << "httplib rsp length is " << rsp.length();
@@ -22,7 +24,7 @@ static auto WriteCallback(void* contents, size_t size, size_t nmemb, std::string
     return size * nmemb;
 }
 
-TEST(get, curl) {
+TEST(HTTP, curl) {
     CURL* curl = curl_easy_init();
 
     if (curl == nullptr) {
@@ -48,4 +50,29 @@ TEST(get, curl) {
         LOG(INFO) << "curl get error " << curl_easy_strerror(res);
     }
     curl_easy_cleanup(curl);
+}
+
+TEST(HTTP, timeout) {
+    cpr::Response resp = cpr::Get(
+        cpr::Url{"http://www.httpbin.org/get"},
+        cpr::Timeout{1000},
+        cpr::Ssl(cpr::ssl::TLSv1_2{}),
+        cpr::VerifySsl(false));
+
+    EXPECT_LE(resp.elapsed, 1);
+}
+
+TEST(HTTP, post) {
+    cpr::Response resp = cpr::Post(
+        cpr::Url{"http://www.httpbin.org/post"},
+        cpr::Body{"This is raw POST data"},
+        cpr::Timeout{5000},
+        cpr::Header{{"Content-Type", "text/plain"}});
+
+    LOG(INFO) << "status is " << resp.status_code;
+}
+
+TEST(HTTP, asyncget) {
+    cpr::AsyncResponse fr = cpr::GetAsync(cpr::Url{"http://www.httpbin.org/get"});
+    cpr::Response resp = fr.get();
 }
