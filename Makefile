@@ -6,6 +6,9 @@ all: cc_gen
 build:
 	@bazel build --config=asan --config=local //app:usage
 
+build_pb:
+	@bazel build --config=asan --config=local //app:parameter_pb
+
 cc_gen:
 	@bazel run --config=asan --config=local //:cc_gen
 
