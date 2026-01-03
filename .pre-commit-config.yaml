@@ -3,6 +3,7 @@ repos:
     rev: "v17.0.6"
     hooks:
       - id: clang-format
+        types_or: [c++, c]
   - repo: https://github.com/keith/pre-commit-buildifier
     rev: "8.2.1"
     hooks:

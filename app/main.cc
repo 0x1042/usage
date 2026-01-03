@@ -21,14 +21,23 @@ __attribute__((destructor(101))) void dinit() {
     cpuinfo_deinitialize();
 }
 
+void log_env(char** envp) {
+    LOG(INFO) << "-----------------------------";
+    for (char** env = envp; *env != nullptr; ++env) { // NOLINT
+        LOG(INFO) << "env " << *env;
+    }
+    LOG(INFO) << "-----------------------------";
+}
+
 } // namespace
 
-auto main(int argc, char** argv) -> int {
+auto main(int argc, char** argv, char** envp) -> int {
     absl::ParseCommandLine(argc, argv);
     testing::InitGoogleTest(&argc, argv);
     absl::InitializeLog();
     absl::SetMinLogLevel(absl::LogSeverityAtLeast::kInfo);
     absl::SetStderrThreshold(absl::LogSeverityAtLeast::kInfo);
+    log_env(envp);
 
     EnvInfo info;
 

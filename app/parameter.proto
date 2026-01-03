@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package idl;
+
+message Base {
+  map<string, string> base = 1;
+}
+
+enum DataType {
+  INT64 = 0;
+  UINT64 = 1;
+  FLOAT = 2;
+  DOUBLE = 3;
+}
+
+message Parameter {
+  string name = 1;
+  DataType dt = 2;
+  string desc = 3;
+  map<string, Attr> attrs = 4;
+  string alias = 5;
+  int64 id = 6;
+  repeated Parameter fields = 10;
+}
+
+message Attr {
+  oneof Value {
+    bytes string_value = 1;
+    int32 int32_value = 2;
+    uint32 uint32_value = 3;
+    int64 int64_value = 4;
+    uint64 uint64_value = 5;
+    float float_value = 6;
+    double double_value = 7;
+    bool bool_value = 8;
+    fixed64 fixed64_value = 9;
+  }
+}

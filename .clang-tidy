@@ -9,6 +9,7 @@ Checks: >
     abseil-*,
     clang-analyzer-core.*,
     -readability-magic-numbers,
+    -bugprone-easily-swappable-parameters,
     -readability-identifier-length,
     -cppcoreguidelines-avoid-magic-numbers,
     -cppcoreguidelines-non-private-member-variables-in-classes,
