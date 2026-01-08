@@ -1,6 +1,7 @@
 """
 common copts and lint opts
 """
+
 DEFAULT_COPTS = [
     "-std=c++23",
     "-Wall",
@@ -16,4 +17,5 @@ DEFAULT_LINKOPTS = select({
         "-Wl,--gc-sections",
         "-Wl,--strip-all",
     ],
+    "//conditions:default": [],
 })
