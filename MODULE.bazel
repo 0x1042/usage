@@ -21,12 +21,18 @@ bazel_dep(name = "cpp-httplib", version = "0.22.0")
 bazel_dep(name = "cpuinfo", version = "0.0.0-20250925-877328f")
 bazel_dep(name = "stdexec", version = "5d9f3bfb032e9d71b2292b7add7d90cbf9d037a9")
 bazel_dep(name = "protobuf", version = "33.2")
+bazel_dep(name = "magic_enum", version = "0.9.7")
+bazel_dep(name = "libffi", version = "3.4.7.bcr.3")
+bazel_dep(name = "foonathan_memory", version = "0.7.3.bcr.2")
 bazel_dep(name = "compilation_database", version = "0.2.0")
 git_override(
     module_name = "compilation_database",
     commit = "8f33eab1f0bd0e03466d18ab6f5258772aacbba9",
     remote = "https://github.com/0x1042/compilation_database.git",
 )
+
+non_module_dependencies = use_extension("//bazel:extensions.bzl", "non_module_dependencies")
+use_repo(non_module_dependencies, "taskflow")
 
 go_sdk = use_extension("@rules_go//go:extensions.bzl", "go_sdk")
 go_sdk.host()
