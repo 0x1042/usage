@@ -1,8 +1,8 @@
 #include <cstdlib>
 
-#include "absl/log/log.h"
 #include "compressor.h"
 #include "gtest/gtest.h"
+#include "log.h"
 
 class CompressorTest : public ::testing::Test {
 public:
@@ -12,7 +12,7 @@ public:
         if (bin_dir != nullptr) {
             origin = std::string(bin_dir);
         }
-        LOG(INFO) << "origin size is " << origin.size();
+        INFO("origin size is {}", origin.size());
     }
 
     std::string origin;
@@ -21,23 +21,23 @@ public:
 TEST_F(CompressorTest, lz4) {
     auto lz4 = Compressor::create(Compressor::Type::LZ4);
     auto compressed = lz4->compress(origin);
-    LOG(INFO) << "lz4 compressed ratio " << float(compressed.size()) / float(origin.size());
+    INFO("lz4 compressed ratio {}", float(compressed.size()) / float(origin.size()));
     auto decompressed = lz4->decompress(compressed);
-    LOG(INFO) << "lz4 decompressed size is " << decompressed.size();
+    INFO("lz4 decompressed size {}", decompressed.size());
 }
 
 TEST_F(CompressorTest, snappy) {
     auto lz4 = Compressor::create(Compressor::Type::SNAPPY);
     auto compressed = lz4->compress(origin);
-    LOG(INFO) << "snappy compressed ratio " << float(compressed.size()) / float(origin.size());
+    INFO("snappy compressed ratio {}", float(compressed.size()) / float(origin.size()));
     auto decompressed = lz4->decompress(compressed);
-    LOG(INFO) << "snappy decompressed size is " << decompressed.size();
+    INFO("snappy decompressed size {}", decompressed.size());
 }
 
 TEST_F(CompressorTest, zstd) {
     auto lz4 = Compressor::create(Compressor::Type::ZSTD);
     auto compressed = lz4->compress(origin);
-    LOG(INFO) << "zstd compressed ratio " << float(compressed.size()) / float(origin.size());
+    INFO("zstd compressed ratio {}", float(compressed.size()) / float(origin.size()));
     auto decompressed = lz4->decompress(compressed);
-    LOG(INFO) << "zstd decompressed size is " << decompressed.size();
+    INFO("zstd decompressed size {}", decompressed.size());
 }

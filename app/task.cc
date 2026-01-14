@@ -3,10 +3,10 @@
 #include <mutex>
 #include <thread>
 
-#include "absl/log/log.h"
 #include "absl/synchronization/notification.h"
 #include "exec/static_thread_pool.hpp"
 #include "gtest/gtest.h"
+#include "log.h"
 #include "stdexec/execution.hpp"
 
 class BgTaskStd {
@@ -15,7 +15,8 @@ public:
         t_ = std::thread([this]() -> void {
             std::unique_lock<std::mutex> lock(m_);
 
-            while (!cv_.wait_for(lock, std::chrono::seconds(1), [this]() -> bool { return stop_; })) {
+            while (
+                !cv_.wait_for(lock, std::chrono::seconds(1), [this]() -> bool { return stop_; })) {
                 run();
             }
         });
@@ -31,7 +32,8 @@ public:
         if (t_.joinable()) {
             t_.join();
         }
-        LOG(INFO) << __PRETTY_FUNCTION__ << " task exit";
+
+        INFO("{} task exit", __PRETTY_FUNCTION__);
     }
 
     BgTaskStd(const BgTaskStd&) = delete;
@@ -56,7 +58,8 @@ public:
     auto operator=(const BgWithAbsl&) -> BgWithAbsl& = delete;
     auto operator=(BgWithAbsl&&) -> BgWithAbsl& = delete;
 
-    BgWithAbsl(std::string_view name, absl::Duration interval = absl::Seconds(1)) : name_(name), interval_(interval) {}
+    BgWithAbsl(std::string_view name, absl::Duration interval = absl::Seconds(1))
+        : name_(name), interval_(interval) {}
 
     // 严禁在基类构造函数启动线程
     virtual ~BgWithAbsl() { stop(); }
@@ -68,11 +71,11 @@ public:
         }
 
         t_ = std::thread([this]() -> void {
-            LOG(INFO) << name_ << " task thread started";
+            INFO("{} task thread started", name_);
             while (!notify_.WaitForNotificationWithTimeout(interval_)) {
                 run();
             }
-            LOG(INFO) << name_ << " task thread exiting";
+            WARN("{} task thread exiting", name_);
         });
     }
 
@@ -107,12 +110,12 @@ public:
     auto operator=(MockBgTask&&) -> MockBgTask& = delete;
     ~MockBgTask() override { stop(); }
 
-    void run() override { LOG(INFO) << __PRETTY_FUNCTION__ << " MockBgTask  task run "; }
+    void run() override { INFO("{} MockBgTask task run ", __PRETTY_FUNCTION__); }
 };
 
 class MockBgTask2 : public BgTaskStd {
 public:
-    void run() override { LOG(INFO) << __PRETTY_FUNCTION__ << " MockBgTask2  task run "; }
+    void run() override { INFO("{} MockBgTask2 task run ", __PRETTY_FUNCTION__); }
 };
 
 TEST(BgWithAbslTest, CallsRunPeriodically) {
@@ -153,5 +156,5 @@ TEST(exec, exec) {
         stdexec::starts_on(sched, stdexec::just(2) | stdexec::then(fun)));
 
     auto [i, j, k] = stdexec::sync_wait(work).value();
-    LOG(INFO) << "i = " << i << " j = " << j << " k = " << k;
+    INFO("i = {} j = {} k = {}", i, j, k);
 }
