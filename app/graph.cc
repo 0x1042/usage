@@ -1,5 +1,7 @@
-#include "absl/log/log.h"
+#include <bit>
+
 #include "gtest/gtest.h"
+#include "log.h"
 #include "taskflow/taskflow.hpp"
 
 TEST(graph, hello) {
@@ -7,14 +9,10 @@ TEST(graph, hello) {
     tf::Executor executor;
 
     // create a task dependency graph
-    tf::Task a
-        = taskflow.emplace([]() -> void { LOG(INFO) << __PRETTY_FUNCTION__ << " Task A run"; });
-    tf::Task b
-        = taskflow.emplace([]() -> void { LOG(INFO) << __PRETTY_FUNCTION__ << " Task B run"; });
-    tf::Task c
-        = taskflow.emplace([]() -> void { LOG(INFO) << __PRETTY_FUNCTION__ << " Task C run"; });
-    tf::Task d
-        = taskflow.emplace([]() -> void { LOG(INFO) << __PRETTY_FUNCTION__ << " Task D run"; });
+    tf::Task a = taskflow.emplace([]() -> void { DEBUG("{} Task A run...", __PRETTY_FUNCTION__); });
+    tf::Task b = taskflow.emplace([]() -> void { DEBUG("{} Task B run...", __PRETTY_FUNCTION__); });
+    tf::Task c = taskflow.emplace([]() -> void { DEBUG("{} Task C run...", __PRETTY_FUNCTION__); });
+    tf::Task d = taskflow.emplace([]() -> void { DEBUG("{} Task D run...", __PRETTY_FUNCTION__); });
 
     a.precede(b);
     a.precede(c);
