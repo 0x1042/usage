@@ -1,5 +1,8 @@
 #include "absl/random/random.h"
 
+#include <chrono>
+#include <random>
+
 #include "absl/log/log.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
@@ -15,4 +18,19 @@ TEST(random, uniform) {
     }
 
     LOG(INFO) << "Bernoulli." << absl::Bernoulli(gen, 0.5);
+}
+
+TEST(random, std) {
+    using namespace ::testing;
+
+    auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::mt19937_64 engine(seed);
+    std::uniform_int_distribution<int> dist(1, 100);
+
+    int iterations = 10;
+
+    for ([[maybe_unused]] int idx : std::views::iota(0, iterations)) {
+        int num = dist(engine);
+        EXPECT_THAT(num, AllOf(Ge(1), Le(100)));
+    }
 }

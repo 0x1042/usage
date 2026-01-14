@@ -4,11 +4,11 @@
 
 #include <sys/utsname.h>
 
-#include "absl/flags/parse.h"
 #include "absl/log/globals.h"
 #include "absl/log/initialize.h"
 #include "absl/log/log.h"
 #include "cpuinfo.h"
+#include "gflags/gflags.h"
 #include "gtest/gtest.h"
 #include "meta.h"
 
@@ -32,8 +32,8 @@ void log_env(char** envp) {
 } // namespace
 
 auto main(int argc, char** argv, char** envp) -> int {
-    absl::ParseCommandLine(argc, argv);
     testing::InitGoogleTest(&argc, argv);
+    gflags::ParseCommandLineFlags(&argc, &argv, false);
     absl::InitializeLog();
     absl::SetMinLogLevel(absl::LogSeverityAtLeast::kInfo);
     absl::SetStderrThreshold(absl::LogSeverityAtLeast::kInfo);
