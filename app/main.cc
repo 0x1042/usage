@@ -10,6 +10,7 @@
 #include "cpuinfo.h"
 #include "gflags/gflags.h"
 #include "gtest/gtest.h"
+#include "log.h"
 #include "meta.h"
 
 namespace {
@@ -24,7 +25,7 @@ __attribute__((destructor(101))) void dinit() {
 void log_env(char** envp) {
     LOG(INFO) << "-----------------------------";
     for (char** env = envp; *env != nullptr; ++env) { // NOLINT
-        LOG(INFO) << "env " << *env;
+        INFO("env {}", *env);
     }
     LOG(INFO) << "-----------------------------";
 }
@@ -41,7 +42,7 @@ auto main(int argc, char** argv, char** envp) -> int {
 
     EnvInfo info;
 
-    LOG(INFO) << info.toStr();
+    INFO("env info. {}", info.toStr());
 
     return RUN_ALL_TESTS();
 }
