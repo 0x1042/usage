@@ -5,7 +5,7 @@
 #include <string>
 #include <system_error>
 
-#include "absl/log/log.h"
+#include "app/log.h"
 #include "gtest/gtest.h"
 #include "meta.h"
 
@@ -13,59 +13,50 @@ namespace {
 namespace fs = std::filesystem;
 }
 
+#define CONCAT_INNER(a, b, c, d)        a##b##c##d
+#define CONCAT_EXPAND(prefix, mid, num) CONCAT_INNER(prefix, mid, _, num)
+#define UNIQUE_TMP_VAR(prefix)          CONCAT_EXPAND(prefix, _tmp, __COUNTER__)
+
+#define ON_EXIT(dir)                                    \
+    auto UNIQUE_TMP_VAR(exit) = defer([&]() -> void {   \
+        if (fs::remove(dir)) {                          \
+            INFO("remove {} success.", (dir).string()); \
+        } else {                                        \
+            ERROR("remove {} failed!", (dir).string()); \
+        }                                               \
+    })
+
 TEST(fs, createdir1) {
     fs::path dir = "./log";
-
-    auto rm = defer([&]() -> void {
-        if (fs::remove(dir)) {
-            LOG(INFO) << "remove " << dir << " success!";
-        } else {
-            LOG(ERROR) << "remove " << dir << " failed!";
-        }
-    });
-
+    ON_EXIT(dir);
     if (fs::create_directory(dir)) {
-        LOG(INFO) << "create " << dir << " success!";
+        INFO("create {} success.", dir.string());
     } else {
-        LOG(ERROR) << "create " << dir << " failed!";
+        ERROR("create {} failed!", dir.string());
     }
 }
 
 TEST(fs, createdir2) {
     fs::path dir = "/log";
     std::error_code ec{};
-
-    auto rm = defer([&]() -> void {
-        if (fs::remove(dir)) {
-            LOG(INFO) << "remove " << dir << " success!";
-        } else {
-            LOG(ERROR) << "remove " << dir << " failed!";
-        }
-    });
+    ON_EXIT(dir);
 
     if (fs::create_directory(dir, ec)) {
-        LOG(INFO) << "create " << dir << " success!";
+        INFO("create {} success.", dir.string());
     } else {
-        LOG(ERROR) << "create " << dir << " failed!" << ec.message();
+        ERROR("create {} failed! error {}", dir.string(), ec.message());
     }
 }
 
 TEST(fs, createdir3) {
     fs::path nested = "./log/run";
     std::error_code ec{};
-
-    auto rm = defer([&]() -> void {
-        if (fs::remove(nested)) {
-            LOG(INFO) << "remove " << nested << " success!";
-        } else {
-            LOG(ERROR) << "remove " << nested << " failed!";
-        }
-    });
+    ON_EXIT(nested);
 
     if (fs::create_directories(nested, ec)) {
-        LOG(INFO) << "create " << nested << " success!";
+        INFO("create {} success.", nested.string());
     } else {
-        LOG(ERROR) << "create " << nested << " failed!" << ec.message();
+        ERROR("create {} failed! error {}", nested.string(), ec.message());
     }
 }
 
@@ -89,51 +80,49 @@ TEST(fs, ls) {
         buf.append(" modify time:");
         buf.append(std::format("{0:%X}", fs::last_write_time(entry)));
 
-        LOG(INFO) << "entry info:" << buf;
+        INFO("entry info {}", buf);
     }
 }
 
 TEST(fs, tmp) {
     const auto& tmp_dir = fs::temp_directory_path();
-    LOG(INFO) << "tmp dir is " << tmp_dir;
+    INFO("tmp dir is {}", tmp_dir.string());
     fs::path mytmp_dir = tmp_dir / "logs";
 
     std::error_code ec;
 
     if (fs::create_directory(mytmp_dir, ec)) {
-        LOG(INFO) << "create " << mytmp_dir << " success";
+        INFO("create {} success.", mytmp_dir.string());
     } else {
-        LOG(ERROR) << "create " << mytmp_dir << " fail >>> " << ec.message();
+        ERROR("create {} failed! error {}", mytmp_dir.string(), ec.message());
     }
 }
 
 TEST(fs, copyfile) {
     std::string src = "MODULE.bazel";
     std::string dst = fs::temp_directory_path() / "app/MODULE.bazel";
+    std::error_code ec;
 
     try {
-        if (fs::copy_file(src, dst)) {
-            LOG(INFO) << "copy file success";
-        } else {
-            LOG(ERROR) << "copy file error";
+        if (!(fs::copy_file(src, dst, ec))) {
+            ERROR("copy file error {}", ec.message());
         }
     } catch (const std::exception& ex) {
-        LOG(ERROR) << "copy exception " << ex.what();
+        ERROR("copy exception {}", ex.what());
     }
 }
 
 TEST(fs, copyfiles) {
     std::string src = "app";
     std::string dst = fs::temp_directory_path() / "app";
+    std::error_code ec;
 
     try {
-        if (fs::copy_file(src, dst, fs::copy_options::recursive)) {
-            LOG(INFO) << "copy dir success";
-        } else {
-            LOG(ERROR) << "copy dir error";
+        if (!(fs::copy_file(src, dst, fs::copy_options::recursive), ec)) {
+            ERROR("copy dir error {}", ec.message());
         }
     } catch (const std::exception& ex) {
-        LOG(ERROR) << "copy exception " << ex.what();
+        ERROR("copy exception {}", ex.what());
     }
 }
 
@@ -150,41 +139,43 @@ TEST(fs, renameormove) {
     fs::rename(old_name, new_name);
 
     for (const auto& entry : fs::directory_iterator("tmp")) {
-        LOG(INFO) << "tmp dir >>>" << entry;
+        INFO("tmp dir >>> {}", entry.path().string());
     }
 }
 
 TEST(fs, exist) {
-    LOG(INFO) << "app/BUILD exit: " << fs::exists("app/BUILD");
-    LOG(INFO) << "app/BUILD.bazel exit: " << fs::exists("app/BUILD.bazel");
+    INFO("app/BUILD exit {}", fs::exists("app/BUILD"));
+    INFO("app/BUILD.bazel exit exit {}", fs::exists("app/BUILD.bazel exit"));
 }
 
 TEST(fs, symlink) {
     fs::path external = "external";
-    LOG(INFO) << "external is symlink " << fs::is_symlink(external);
+    INFO("external is symlink {}", fs::is_symlink(external));
 
     if (fs::is_symlink(external)) {
         const auto& real = fs::read_symlink(external);
-        LOG(INFO) << "external point to " << real;
+        INFO("external point to {}", real.string());
     }
 }
 
 TEST(fs, absolute) {
     fs::path external = "external";
     const auto& external_absolute = fs::absolute(external);
-    LOG(INFO) << "external absolute path: " << external_absolute;
-    LOG(INFO) << "external absolute path is_symlink : " << fs::is_symlink(external_absolute);
+    INFO(
+        "external absolute path {} is_symlink {}",
+        external_absolute.string(),
+        fs::is_symlink(external_absolute));
 
     fs::path app = "app";
-    LOG(INFO) << "app app path: " << fs::absolute(app);
+    INFO("app path {}", fs::absolute(app).string());
 }
 
 TEST(fs, relative) {
     fs::path external = fs::absolute("external");
     fs::path current_path = fs::current_path();
-    LOG(INFO) << "external " << external << " cur:" << current_path;
 
-    LOG(INFO) << "relative is: " << fs::relative(current_path, current_path);
+    INFO("external {} cur {} ", external.string(), current_path.string());
+    INFO("relative is {} ", fs::relative(current_path, current_path).string());
 }
 
 TEST(fs, space) {
@@ -201,7 +192,7 @@ TEST(fs, space) {
     buf.append("\tcapacity:");
     buf.append(std::to_string(space_info.available));
 
-    LOG(INFO) << "space info:" << buf;
+    INFO("space info {}", buf);
 }
 
 TEST(fs, perm) {
@@ -231,5 +222,5 @@ TEST(fs, perm) {
     perm_fn(fs::perms::others_write, "w");
     perm_fn(fs::perms::others_exec, "x");
 
-    LOG(INFO) << "file:" << file << " permissions:" << buf;
+    INFO("file {} permissions {}", file.string(), buf);
 }

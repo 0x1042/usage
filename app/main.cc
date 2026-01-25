@@ -1,4 +1,5 @@
 #include <cstring>
+#include <memory>
 
 #include <unistd.h>
 
@@ -23,16 +24,18 @@ __attribute__((destructor(101))) void dinit() {
 }
 
 void log_env(char** envp) {
-    LOG(INFO) << "-----------------------------";
+    INFO("-----------------------------");
     for (char** env = envp; *env != nullptr; ++env) { // NOLINT
         INFO("env {}", *env);
     }
-    LOG(INFO) << "-----------------------------";
+    INFO("-----------------------------");
 }
 
 } // namespace
 
 auto main(int argc, char** argv, char** envp) -> int {
+    std::shared_ptr<void> on_exit(nullptr, [](...) -> void { INFO("{} is exit", getpid()); });
+
     testing::InitGoogleTest(&argc, argv);
     gflags::ParseCommandLineFlags(&argc, &argv, false);
     absl::InitializeLog();

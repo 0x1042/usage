@@ -8,6 +8,7 @@
 #include <source_location>
 #include <string>
 #include <string_view>
+#include <thread>
 #include <utility>
 
 enum class LogLevel : uint8_t {
@@ -54,9 +55,13 @@ inline void log_impl(
     // 格式化最终日志条目
     // C++20 chrono 也可以直接被 format
     // {:%F %T} 是 YYYY-MM-DD HH:MM:SS 格式
+
+    thread_local auto tid = std::this_thread::get_id();
+
     std::string final_log = std::format(
-        "[{:%F %T}] [{}] [{}:{}] {}\n",
+        "[{:%F %T}] -{}- [{}] [{}:{}] {}\n",
         std::chrono::floor<std::chrono::seconds>(now), // 时间
+        tid,
         level_str, // 等级文本
         loc.file_name(), // 文件名
         loc.line(), // 行号
@@ -75,8 +80,13 @@ void log(
     log_impl(level, std::chrono::system_clock::now(), loc, user_msg);
 }
 
-#define TRACE(fmt, ...) log(LogLevel::TRACE, std::source_location::current(), fmt, __VA_ARGS__)
-#define DEBUG(fmt, ...) log(LogLevel::DEBUG, std::source_location::current(), fmt, __VA_ARGS__)
-#define INFO(fmt, ...) log(LogLevel::INFO, std::source_location::current(), fmt, __VA_ARGS__)
-#define WARN(fmt, ...) log(LogLevel::WARN, std::source_location::current(), fmt, __VA_ARGS__)
-#define ERROR(fmt, ...) log(LogLevel::ERROR, std::source_location::current(), fmt, __VA_ARGS__)
+#define TRACE(fmt, ...) \
+    log(LogLevel::TRACE, std::source_location::current(), fmt __VA_OPT__(, ) __VA_ARGS__)
+#define DEBUG(fmt, ...) \
+    log(LogLevel::DEBUG, std::source_location::current(), fmt __VA_OPT__(, ) __VA_ARGS__)
+#define INFO(fmt, ...) \
+    log(LogLevel::INFO, std::source_location::current(), fmt __VA_OPT__(, ) __VA_ARGS__)
+#define WARN(fmt, ...) \
+    log(LogLevel::WARN, std::source_location::current(), fmt __VA_OPT__(, ) __VA_ARGS__)
+#define ERROR(fmt, ...) \
+    log(LogLevel::ERROR, std::source_location::current(), fmt __VA_OPT__(, ) __VA_ARGS__)

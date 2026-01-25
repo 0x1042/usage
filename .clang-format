@@ -50,7 +50,8 @@ IncludeCategories:
     - Regex: ".*"
       Priority: 40
       
-AlignEscapedNewlines: DontAlign
+AlignEscapedNewlines: Left
+AlignConsecutiveMacros: true
 AlignTrailingComments: false
 
 # Not changed:

@@ -11,3 +11,10 @@ def data_dependency():
         strip_prefix = "taskflow-4.0.0",
         url = "https://github.com/taskflow/taskflow/archive/refs/tags/v4.0.0.zip",
     )
+
+    http_archive(
+        name = "expected",
+        build_file = "//bazel/3rdparty:expected.bzl",
+        strip_prefix = "expected-1.3.1",
+        url = "https://github.com/TartanLlama/expected/archive/refs/tags/v1.3.1.zip",
+    )

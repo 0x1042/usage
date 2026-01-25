@@ -27,7 +27,9 @@ bazel_dep(name = "gflags", version = "2.2.2.bcr.1")
 bazel_dep(name = "spdlog", version = "1.17.0")
 bazel_dep(name = "google_benchmark", version = "1.9.4")
 bazel_dep(name = "protobuf", version = "33.4")
-bazel_dep(name = "folly", version = "2025.01.13.00.bcr.5")
+
+# bazel_dep(name = "folly", version = "2025.01.13.00.bcr.5")
+bazel_dep(name = "s2geometry", version = "0.13.1")
 bazel_dep(name = "compilation_database", version = "0.2.0")
 git_override(
     module_name = "compilation_database",
@@ -37,6 +39,7 @@ git_override(
 
 non_module_dependencies = use_extension("//bazel:extensions.bzl", "non_module_dependencies")
 use_repo(non_module_dependencies, "taskflow")
+use_repo(non_module_dependencies, "expected")
 
 go_sdk = use_extension("@rules_go//go:extensions.bzl", "go_sdk")
 go_sdk.host()
