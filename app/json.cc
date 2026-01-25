@@ -3,7 +3,7 @@
 #include <string_view>
 #include <type_traits>
 
-#include "absl/log/log.h"
+#include "app/log.h"
 #include "gtest/gtest.h"
 #include "rapidjson/document.h"
 #include "rapidjson/pointer.h"
@@ -11,26 +11,57 @@
 #include "rapidjson/writer.h"
 
 template <typename T>
-auto get_pointer(const rapidjson::Document& doc, const char* path) -> std::optional<T> {
-    const rapidjson::Value* value = rapidjson::Pointer(path).Get(doc);
+struct AlwaysFalse : std::false_type {};
+
+template <typename T>
+constexpr bool always_false_v = AlwaysFalse<T>::value;
+
+template <typename T>
+auto get_value(const rapidjson::Document& doc, const char* path, T& dst) {
+    rapidjson::Pointer pointer(path);
+    if (!pointer.IsValid()) {
+        ERROR("Invalid JSON pointer syntax: {}", path);
+        return;
+    }
+
+    const rapidjson::Value* value = pointer.Get(doc);
     if (!value) {
-        return std::nullopt;
+        return;
     }
 
     if constexpr (std::is_same_v<T, std::string> || std::is_same_v<T, std::string_view>) {
-        return value->IsString() ? std::optional<T>{value->GetString()} : std::nullopt;
-    } else if constexpr (std::is_same_v<T, int>) {
-        return value->IsInt() ? std::optional<T>{value->GetInt()} : std::nullopt;
-    } else if constexpr (std::is_same_v<T, int64_t>) {
-        return value->IsInt64() ? std::optional<T>{value->GetInt64()} : std::nullopt;
-    } else if constexpr (std::is_same_v<T, uint64_t>) {
-        return value->IsUint64() ? std::optional<T>{value->GetUint64()} : std::nullopt;
-    } else if constexpr (std::is_floating_point_v<T>) {
-        return value->IsDouble() ? std::optional<T>{value->GetDouble()} : std::nullopt;
+        if (value->IsString()) {
+            dst = value->GetString();
+        }
+        return;
+    } else if constexpr (std::is_same_v<T, int> || std::is_same_v<T, int32_t>) {
+        if (value->IsInt()) {
+            dst = value->GetInt();
+        }
+        return;
+    } else if constexpr (std::is_same_v<T, int64_t> || std::is_same_v<T, long long>) {
+        if (value->IsInt64()) {
+            dst = value->GetInt64();
+        }
+        return;
+    } else if constexpr (std::is_same_v<T, uint64_t> || std::is_same_v<T, uint32_t>) {
+        if (value->IsUint64()) {
+            dst = value->GetUint64();
+        }
+        return;
+    } else if constexpr (
+        std::is_floating_point_v<T> || std::is_same_v<T, double> || std::is_same_v<T, float>) {
+        if (value->IsDouble()) {
+            dst = value->GetDouble();
+        }
+        return;
     } else if constexpr (std::is_same_v<T, bool>) {
-        return value->IsBool() ? std::optional<T>{value->GetBool()} : std::nullopt;
+        if (value->IsBool()) {
+            dst = value->GetBool();
+        }
+        return;
     } else {
-        static_assert(false, "Unsupported type");
+        static_assert(always_false_v<T>, "Unsupported type for JSON deserialization");
     }
 }
 
@@ -60,7 +91,8 @@ void settter(rapidjson::Document& doc, std::string_view key, const T& target) {
     }
 }
 
-#define SET(key) settter(doc, #key, id)
+#define SET(key) settter(doc, #key, key)
+#define GET(key) get_value(doc, "/" #key, key)
 
 namespace json {
 struct Item {
@@ -86,6 +118,31 @@ struct Item {
         return buffer.GetString();
     }
 
+    [[nodiscard]] auto toStrV2() const -> std::string {
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        writer.StartObject();
+
+        writer.Key("id");
+        writer.Int64(id);
+
+        writer.Key("score");
+        writer.Double(score);
+
+        writer.Key("coef");
+        writer.Double(coef);
+
+        writer.Key("boost");
+        writer.Int(boost);
+
+        writer.Key("enable");
+        writer.Bool(enable);
+
+        writer.EndObject();
+
+        return buffer.GetString();
+    }
+
     Item() = default;
 
     explicit Item(const std::string& json) {
@@ -95,6 +152,11 @@ struct Item {
         if (doc.HasParseError()) {
             return;
         }
+        GET(id);
+        GET(score);
+        GET(coef);
+        GET(boost);
+        GET(enable);
     }
 };
 } // namespace json
@@ -106,11 +168,20 @@ TEST(tojson, tojson) {
     item.coef = 2.1;
     item.boost = 2;
     item.enable = true;
-    LOG(INFO) << item.toStr();
+
+    INFO("item info {}", item.toStr());
+    INFO("item info v2 {}", item.toStrV2());
+    EXPECT_EQ(item.toStr(), item.toStrV2());
 }
 
 TEST(tojson, fromjson) {
-    json::Item item;
+    const std::string tmp
+        = R"({"id":1024,"score":3.14,"coef":2.0999999046325684,"boost":2,"enable":true})";
 
-    LOG(INFO) << item.toStr();
+    json::Item item(tmp);
+
+    INFO("item info {}", item.toStr());
 }
+
+#undef SET
+#undef GET
