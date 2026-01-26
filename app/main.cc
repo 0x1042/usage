@@ -34,6 +34,14 @@ void log_env(char** envp) {
 } // namespace
 
 auto main(int argc, char** argv, char** envp) -> int {
+#ifdef __GLIBCXX__
+    std::clog << "__GLIBCXX__:" << __GLIBCXX__ << '\n';
+#endif
+
+#ifdef _LIBCPP_VERSION
+    std::clog << "_LIBCPP_VERSION:" << _LIBCPP_VERSION << '\n';
+#endif
+
     std::shared_ptr<void> on_exit(nullptr, [](...) -> void { INFO("{} is exit", getpid()); });
 
     testing::InitGoogleTest(&argc, argv);
