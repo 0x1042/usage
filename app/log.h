@@ -57,11 +57,13 @@ inline void log_impl(
     // {:%F %T} 是 YYYY-MM-DD HH:MM:SS 格式
 
     thread_local auto tid = std::this_thread::get_id();
+    std::ostringstream oss;
+    oss << tid;
 
     std::string final_log = std::format(
-        "[{:%F %T}] -{}- [{}] [{}:{}] {}\n",
+        "[{:%F %T}] [{}] [{}] [{}:{}] {}\n",
         std::chrono::floor<std::chrono::seconds>(now), // 时间
-        tid,
+        oss.str(),
         level_str, // 等级文本
         loc.file_name(), // 文件名
         loc.line(), // 行号

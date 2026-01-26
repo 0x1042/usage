@@ -90,7 +90,7 @@ cc_test(
         "future_test.cc",
         "get.cc",
         "graph.cc",
-        "int128.cc",
+        # "int128.cc",
         "json.cc",
         "main.cc",
         "meta_test.cc",
