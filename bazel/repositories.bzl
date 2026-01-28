@@ -18,3 +18,10 @@ def data_dependency():
         strip_prefix = "expected-1.3.1",
         url = "https://github.com/TartanLlama/expected/archive/refs/tags/v1.3.1.zip",
     )
+
+    http_archive(
+        name = "workflow",
+        build_file = "//bazel/3rdparty:workflow.bzl",
+        strip_prefix = "workflow-0.11.11",
+        url = "https://github.com/sogou/workflow/archive/refs/tags/v0.11.11.zip",
+    )

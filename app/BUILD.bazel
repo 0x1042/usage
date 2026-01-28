@@ -1,7 +1,7 @@
 load("@protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
 load("@protobuf//bazel:proto_library.bzl", "proto_library")
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
-load("//app:copts.bzl", "DEFAULT_COPTS")
+load("//bazel:copts.bzl", "DEFAULT_COPTS")
 
 proto_library(
     name = "parameter_proto",
@@ -123,6 +123,8 @@ cc_test(
         "@cpuinfo",
         "@curl",
         "@s2geometry//:s2",
+        "@workflow//:common",
+        "@workflow//:http",
         # "@folly//folly/coro:blocking_wait",
         # "@folly//folly/coro:task",
         # "@folly//folly/executors",
@@ -132,6 +134,8 @@ cc_test(
         "@rapidjson",
         "@stdexec",
         "@taskflow",
+        "@boringssl//:ssl",
+        "@boringssl//:crypto",
         "@expected",
     ],
 )
