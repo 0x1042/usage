@@ -54,7 +54,7 @@ auto main(int argc, char** argv, char** envp) -> int {
 
     INFO("{}", exec_cmd({"uname", "-a"}));
 
-#ifdef __LINUX__
+#ifdef __linux__
     INFO("{}", exec_cmd({"ldd", "-v"}));
     INFO("{}", exec_cmd({"gcc", "--version"}));
     INFO("{}", exec_cmd({"lscpu"}));
