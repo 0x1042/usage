@@ -27,6 +27,7 @@ bazel_dep(name = "gflags", version = "2.2.2.bcr.1")
 bazel_dep(name = "spdlog", version = "1.17.0")
 bazel_dep(name = "google_benchmark", version = "1.9.4")
 bazel_dep(name = "protobuf", version = "33.4")
+bazel_dep(name = "reproc", version = "14.2.5")
 
 # bazel_dep(name = "folly", version = "2025.01.13.00.bcr.5")
 bazel_dep(name = "s2geometry", version = "0.13.1")

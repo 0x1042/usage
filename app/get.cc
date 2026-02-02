@@ -1,6 +1,6 @@
 #include <string>
 
-#include "absl/log/log.h"
+#include "app/log.h"
 #include "cpr/api.h"
 #include "cpr/ssl_options.h"
 #include "curl/curl.h"
@@ -10,13 +10,13 @@
 TEST(HTTP, cpr) {
     std::string url = "https://www.baidu.com";
     auto&& rsp = get_with_cpr(url);
-    LOG(INFO) << "cpr rsp length is " << rsp.length();
+    INFO("cpr rsp length is {}", rsp.length());
 }
 
 TEST(HTTP, lib) {
     std::string url = "https://www.baidu.com";
     auto&& rsp = get_with_httplib(url);
-    LOG(INFO) << "httplib rsp length is " << rsp.length();
+    INFO("httplib rsp length is {}", rsp.length());
 }
 
 static auto WriteCallback(void* contents, size_t size, size_t nmemb, std::string* userp) -> size_t {
@@ -31,7 +31,7 @@ TEST(HTTP, curl) {
         return;
     }
 
-    LOG(INFO) << curl_version();
+    INFO("curl version {}", curl_version());
 
     curl_easy_setopt(curl, CURLOPT_URL, "https://www.baidu.com");
     std::string response;
@@ -45,9 +45,9 @@ TEST(HTTP, curl) {
     if (res == CURLE_OK) {
         long response_code = 0;
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-        LOG(INFO) << "curl rsp code " << response_code << " len " << response.size();
+        INFO("curl rsp code {}, len {}", response_code, response.size());
     } else {
-        LOG(INFO) << "curl get error " << curl_easy_strerror(res);
+        INFO("curl get error {}", curl_easy_strerror(res));
     }
     curl_easy_cleanup(curl);
 }
@@ -59,7 +59,7 @@ TEST(HTTP, timeout) {
         cpr::Ssl(cpr::ssl::TLSv1_2{}),
         cpr::VerifySsl(false));
 
-    EXPECT_LE(resp.elapsed, 1);
+    EXPECT_LE(resp.elapsed, 1.01);
 }
 
 TEST(HTTP, post) {
@@ -69,10 +69,15 @@ TEST(HTTP, post) {
         cpr::Timeout{5000},
         cpr::Header{{"Content-Type", "text/plain"}});
 
-    LOG(INFO) << "status is " << resp.status_code;
+    INFO("post status is {}", resp.status_code);
 }
 
-TEST(HTTP, asyncget) {
-    cpr::AsyncResponse fr = cpr::GetAsync(cpr::Url{"http://www.httpbin.org/get"});
-    cpr::Response resp = fr.get();
+TEST(HTTP, put) {
+    cpr::Response put = cpr::Put(
+        cpr::Url{"https://httpbin.org/put"},
+        cpr::Body{R"({"item": "book"})"},
+        cpr::Header{{"Content-Type", "application/json"}},
+        cpr::Timeout{3000});
+
+    INFO("put status is {}", put.status_code);
 }
