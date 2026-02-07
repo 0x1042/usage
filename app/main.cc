@@ -51,15 +51,15 @@ auto main(int argc, char** argv, char** envp) -> int {
         INFO("{} is exit, cost {}", getpid(), absl::FormatDuration(elapsed));
     });
 
-    INFO("{}", exec_cmd({"uname", "-a"}));
+    INFO("\n{}", exec_cmd({"uname", "-a"}));
 
 #ifdef __linux__
-    INFO("{}", exec_cmd({"ldd", "--version"}));
-    INFO("{}", exec_cmd({"gcc", "--version"}));
-    INFO("{}", exec_cmd({"lscpu"}));
-    INFO("{}", exec_cmd({"cat", "/proc/version"}));
-    INFO("{}", exec_cmd({"cat", "/proc/cpuinfo"}));
-    INFO("{}", exec_cmd({"cat", "/proc/meminfo"}));
+    INFO("\n{}", exec_cmd({"ldd", "--version"}));
+    INFO("\n{}", exec_cmd({"gcc", "--version"}));
+    INFO("\n{}", exec_cmd({"lscpu"}));
+    INFO("\n{}", exec_cmd({"cat", "/proc/version"}));
+    INFO("\n{}", exec_cmd({"cat", "/proc/cpuinfo"}));
+    INFO("\n{}", exec_cmd({"cat", "/proc/meminfo"}));
 #endif
 
     testing::InitGoogleTest(&argc, argv);

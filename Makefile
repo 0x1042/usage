@@ -1,13 +1,12 @@
 .PHONY: all cc_gen clean run
 
-all:
-	@bazel build --config=asan --config=local //app:usage
+all: build
 
 build:
 	@bazel build --config=asan --config=local //app:usage
 
 build_bm:
-	@bazel build --config=local --config=opt //bench:bench_json
+	@bazel build --config=local --config=opt //bench:bench
 
 build_pb:
 	@bazel build --config=asan --config=local //app:parameter_pb
