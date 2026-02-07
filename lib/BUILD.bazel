@@ -1,0 +1,84 @@
+load("@protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
+load("@protobuf//bazel:proto_library.bzl", "proto_library")
+load("@rules_cc//cc:defs.bzl", "cc_library")
+load("//bazel:copts.bzl", "DEFAULT_COPTS")
+
+package(default_visibility = ["//visibility:public"])
+
+proto_library(
+    name = "parameter_proto",
+    srcs = ["parameter.proto"],
+)
+
+cc_proto_library(
+    name = "parameter_pb",
+    deps = [
+        ":parameter_proto",
+    ],
+)
+
+cc_library(
+    name = "log",
+    hdrs = [
+        "log.h",
+    ],
+    copts = DEFAULT_COPTS,
+    defines = [],
+    deps = [],
+)
+
+cc_library(
+    name = "compressor",
+    srcs = [
+        "compressor.cc",
+    ],
+    hdrs = [
+        "compressor.h",
+    ],
+    copts = DEFAULT_COPTS,
+    deps = [
+        "@lz4",
+        "@lz4//:lz4_hc",
+        "@snappy",
+        "@zstd",
+    ],
+)
+
+cc_library(
+    name = "http",
+    srcs = [
+        "http.cc",
+    ],
+    hdrs = [
+        "http.h",
+    ],
+    copts = DEFAULT_COPTS,
+    defines = [
+        "CPPHTTPLIB_OPENSSL_SUPPORT",
+    ],
+    deps = [
+        ":log",
+        "@cpp-httplib//:httplib",
+        "@cpr",
+    ],
+)
+
+cc_library(
+    name = "meta",
+    srcs = [
+        "cmd.cc",
+        "meta.cc",
+    ],
+    hdrs = [
+        "cmd.h",
+        "meta.h",
+    ],
+    copts = DEFAULT_COPTS,
+    defines = [
+        "CPPHTTPLIB_OPENSSL_SUPPORT",
+    ],
+    deps = [
+        "@cpuinfo",
+        "@reproc//:reproc++",
+    ],
+)

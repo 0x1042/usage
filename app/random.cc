@@ -3,9 +3,9 @@
 #include <chrono>
 #include <random>
 
-#include "absl/log/log.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include "lib/log.h"
 
 TEST(random, uniform) {
     using namespace ::testing;
@@ -17,7 +17,7 @@ TEST(random, uniform) {
         EXPECT_THAT(absl::Uniform(gen, 0.0, 1.0), AllOf(Ge(0.0), Lt(1.0)));
     }
 
-    LOG(INFO) << "Bernoulli." << absl::Bernoulli(gen, 0.5);
+    INFO("Bernoulli. {}", absl::Bernoulli(gen, 0.5));
 }
 
 TEST(random, std) {

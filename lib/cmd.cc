@@ -1,4 +1,4 @@
-#include "app/cmd.h"
+#include "lib/cmd.h"
 
 auto exec_cmd(const std::vector<std::string>& args) -> std::string {
     reproc::process process;

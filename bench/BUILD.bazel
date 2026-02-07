@@ -1,0 +1,16 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+cc_binary(
+    name = "bench_json",
+    srcs = [
+        "bm_arena.cc",
+        "bm_json.cc",
+        "bm_pmr.cc",
+    ],
+    deps = [
+        "//lib:parameter_pb",
+        "@google_benchmark//:benchmark",
+        "@protobuf",
+        "@rapidjson",
+    ],
+)

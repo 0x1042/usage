@@ -1,7 +1,7 @@
 #include <bit>
 
 #include "gtest/gtest.h"
-#include "log.h"
+#include "lib/log.h"
 #include "taskflow/taskflow.hpp"
 
 TEST(graph, hello) {

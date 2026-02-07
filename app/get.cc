@@ -1,11 +1,11 @@
 #include <string>
 
-#include "app/log.h"
 #include "cpr/api.h"
 #include "cpr/ssl_options.h"
 #include "curl/curl.h"
 #include "gtest/gtest.h"
-#include "http.h"
+#include "lib/http.h"
+#include "lib/log.h"
 
 TEST(HTTP, cpr) {
     std::string url = "https://www.baidu.com";

@@ -3,8 +3,8 @@
 #include <chrono>
 
 #include "absl/time/clock.h"
-#include "app/log.h"
 #include "gtest/gtest.h"
+#include "lib/log.h"
 
 TEST(Time, now) {
     INFO("now is {}", absl::FormatTime(absl::Now()));

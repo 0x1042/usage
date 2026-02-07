@@ -6,7 +6,7 @@
 #include "absl/synchronization/notification.h"
 #include "exec/static_thread_pool.hpp"
 #include "gtest/gtest.h"
-#include "log.h"
+#include "lib/log.h"
 #include "stdexec/execution.hpp"
 
 class BgTaskStd {

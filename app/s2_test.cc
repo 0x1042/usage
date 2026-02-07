@@ -1,5 +1,5 @@
-#include "app/log.h"
 #include "gtest/gtest.h"
+#include "lib/log.h"
 #include "s2/s1angle.h"
 #include "s2/s2cell_id.h"
 #include "s2/s2latlng.h"

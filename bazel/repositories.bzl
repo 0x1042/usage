@@ -2,6 +2,7 @@
 thrid party of non bazel lib
 """
 
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 def data_dependency():
@@ -17,4 +18,11 @@ def data_dependency():
         build_file = "//bazel/3rdparty:expected.bzl",
         strip_prefix = "expected-1.3.1",
         url = "https://github.com/TartanLlama/expected/archive/refs/tags/v1.3.1.zip",
+    )
+
+    git_repository(
+        name = "RESTinCurl",
+        remote = "https://github.com/jgaa/RESTinCurl.git",
+        build_file = "//bazel/3rdparty:RESTinCurl.bzl",
+        commit = "2f8c587eeae2d80582e02c08d9a822d16c74e647",
     )

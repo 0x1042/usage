@@ -33,7 +33,7 @@ jobs:
 
       - name: benchmark
         run: |
-          bazel build --config=ci --config=opt --remote_header=x-buildbuddy-api-key=${{ secrets.BUILDBUDDY_ORG_API_KEY }} //app:bench_json
+          bazel build --config=ci --config=opt --remote_header=x-buildbuddy-api-key=${{ secrets.BUILDBUDDY_ORG_API_KEY }} //bench:bench_json
 
       - name: run-bm
         run: |

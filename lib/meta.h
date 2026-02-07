@@ -18,7 +18,8 @@ template <typename F>
 class DeferredAction {
 public:
     DeferredAction(F&& fn) noexcept : fn_(std::move(fn)) {}
-    DeferredAction(DeferredAction&& other) noexcept : fn_(std::move(other.fn_)), cancelled_(other.cancelled_) {
+    DeferredAction(DeferredAction&& other) noexcept
+        : fn_(std::move(other.fn_)), cancelled_(other.cancelled_) {
         other.cancelled_ = true;
     }
 
