@@ -1,8 +1,8 @@
 #include <memory>
 
-#include "app/parameter.pb.h"
 #include "benchmark/benchmark.h"
 #include "google/protobuf/arena.h"
+#include "lib/parameter.pb.h"
 
 void without_arean(std::shared_ptr<idl::Parameter> param) {
     param->set_id(1);
