@@ -5,9 +5,9 @@
 #include <string>
 #include <system_error>
 
-#include "app/log.h"
 #include "gtest/gtest.h"
-#include "meta.h"
+#include "lib/log.h"
+#include "lib/meta.h"
 
 namespace {
 namespace fs = std::filesystem;

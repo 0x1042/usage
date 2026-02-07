@@ -1,6 +1,6 @@
 #include "absl/strings/escaping.h"
-#include "app/log.h"
 #include "gtest/gtest.h"
+#include "lib/log.h"
 
 TEST(base64, encode) {
     std::string original = "https://abseil.io/fast/99";

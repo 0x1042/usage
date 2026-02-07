@@ -1,10 +1,9 @@
 #include <cstdint>
 
-#include "absl/log/log.h"
 #include "gtest/gtest.h"
-#include "log.h"
+#include "lib/log.h"
 #include "magic_enum/magic_enum.hpp"
-#include "magic_enum/magic_enum_all.hpp"
+#include "magic_enum/magic_enum_utility.hpp"
 
 enum class Color : int16_t {
     NONE = -999,
@@ -32,7 +31,7 @@ TEST(enum, fromstr) {
 TEST(enum, tointeger) {
     Color c1 = Color::GREEN;
 
-    LOG(INFO) << "color_integer is " << magic_enum::enum_integer(c1);
+    INFO("color_integer is {}", magic_enum::enum_integer(c1));
 
     magic_enum::enum_for_each<Color>([](auto val) -> void {
         constexpr Color color = val;

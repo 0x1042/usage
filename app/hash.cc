@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "absl/hash/internal/city.h"
-#include "app/log.h"
 #include "gtest/gtest.h"
+#include "lib/log.h"
 
 TEST(Hash, city) {
     std::string original = "https://abseil.io/fast/99";

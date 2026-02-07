@@ -5,9 +5,8 @@
 #include <string_view>
 #include <vector>
 
-#include "absl/log/log.h"
 #include "gtest/gtest.h"
-#include "log.h"
+#include "lib/log.h"
 
 TEST(fmt, format) {
     std::string_view world = "world";
@@ -108,7 +107,7 @@ TEST(fmt, formatItem) {
     item.coef = 1.23;
     item.tags = tags;
 
-    LOG(INFO) << "item info: " << std::format("{}", item);
+    INFO("item info {}", std::format("{}", item));
 }
 
 template <typename... Args>

@@ -1,90 +1,10 @@
-load("@protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
-load("@protobuf//bazel:proto_library.bzl", "proto_library")
-load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
-load("//app:copts.bzl", "DEFAULT_COPTS")
-
-proto_library(
-    name = "parameter_proto",
-    srcs = ["parameter.proto"],
-)
-
-cc_proto_library(
-    name = "parameter_pb",
-    deps = [
-        ":parameter_proto",
-    ],
-)
-
-cc_library(
-    name = "log",
-    hdrs = [
-        "log.h",
-    ],
-    copts = DEFAULT_COPTS,
-    defines = [],
-    deps = [],
-)
-
-cc_library(
-    name = "http",
-    srcs = [
-        "http.cc",
-    ],
-    hdrs = [
-        "http.h",
-    ],
-    copts = DEFAULT_COPTS,
-    defines = [
-        "CPPHTTPLIB_OPENSSL_SUPPORT",
-    ],
-    deps = [
-        "@abseil-cpp//absl/log:log",
-        "@cpp-httplib//:httplib",
-        "@cpr",
-    ],
-)
-
-cc_library(
-    name = "meta",
-    srcs = [
-        "cmd.cc",
-        "meta.cc",
-    ],
-    hdrs = [
-        "cmd.h",
-        "meta.h",
-    ],
-    copts = DEFAULT_COPTS,
-    defines = [
-        "CPPHTTPLIB_OPENSSL_SUPPORT",
-    ],
-    deps = [
-        "@abseil-cpp//absl/log:log",
-        "@cpuinfo",
-        "@reproc//:reproc++",
-    ],
-)
-
-cc_library(
-    name = "compressor",
-    srcs = [
-        "compressor.cc",
-    ],
-    hdrs = [
-        "compressor.h",
-    ],
-    copts = DEFAULT_COPTS,
-    deps = [
-        "@lz4",
-        "@lz4//:lz4_hc",
-        "@snappy",
-        "@zstd",
-    ],
-)
+load("@rules_cc//cc:defs.bzl", "cc_test")
+load("//bazel:copts.bzl", "DEFAULT_COPTS")
 
 cc_test(
     name = "usage",
     srcs = [
+        "base64.cc",
         "comp.cc",
         "enum.cc",
         "expect_test.cc",
@@ -93,7 +13,7 @@ cc_test(
         "future_test.cc",
         "get.cc",
         "graph.cc",
-        # "int128.cc",
+        "hash.cc",
         "json.cc",
         "main.cc",
         "meta_test.cc",
@@ -101,21 +21,20 @@ cc_test(
         "s2_test.cc",
         "span.cc",
         "strings.cc",
-        "base64.cc",
-        "hash.cc",
         "task.cc",
         "time.cc",
         "traverse.cc",
     ],
     copts = DEFAULT_COPTS,
     deps = [
-        ":compressor",
-        ":http",
-        ":log",
-        ":meta",
+        "//lib:compressor",
+        "//lib:http",
+        "//lib:log",
+        "//lib:meta",
         "@abseil-cpp//absl/cleanup:cleanup",
         "@abseil-cpp//absl/flags:flag",
         "@abseil-cpp//absl/flags:parse",
+        "@abseil-cpp//absl/hash:city",
         "@abseil-cpp//absl/log:flags",
         "@abseil-cpp//absl/log:globals",
         "@abseil-cpp//absl/log:initialize",
@@ -124,36 +43,18 @@ cc_test(
         "@abseil-cpp//absl/strings:strings",
         "@abseil-cpp//absl/synchronization:synchronization",
         "@abseil-cpp//absl/time:time",
-        "@abseil-cpp//absl/hash:city",
+        # "@asio",
         "@cpr",
         "@cpuinfo",
         "@curl",
-        "@s2geometry//:s2",
-        # "@folly//folly/coro:blocking_wait",
-        # "@folly//folly/coro:task",
-        # "@folly//folly/executors",
+        "@expected",
         "@gflags",
         "@googletest//:gtest",
         "@magic_enum",
         "@rapidjson",
+        "@reproc//:reproc++",
+        "@s2geometry//:s2",
         "@stdexec",
         "@taskflow",
-        "@reproc//:reproc++",
-        "@expected",
-    ],
-)
-
-cc_binary(
-    name = "bench_json",
-    srcs = [
-        "bm_arena.cc",
-        "bm_json.cc",
-        "bm_pmr.cc",
-    ],
-    deps = [
-        ":parameter_pb",
-        "@google_benchmark//:benchmark",
-        "@protobuf",
-        "@rapidjson",
     ],
 )

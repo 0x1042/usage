@@ -1,8 +1,8 @@
 #include <cstdlib>
 
-#include "compressor.h"
 #include "gtest/gtest.h"
-#include "log.h"
+#include "lib/compressor.h"
+#include "lib/log.h"
 
 class CompressorTest : public ::testing::Test {
 public:

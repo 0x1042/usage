@@ -1,6 +1,5 @@
 #include <cstring>
 #include <memory>
-#include <string>
 
 #include <unistd.h>
 
@@ -10,12 +9,12 @@
 #include "absl/log/initialize.h"
 #include "absl/time/clock.h"
 #include "absl/time/time.h"
-#include "app/cmd.h"
 #include "cpuinfo.h"
 #include "gflags/gflags.h"
 #include "gtest/gtest.h"
-#include "log.h"
-#include "meta.h"
+#include "lib/cmd.h"
+#include "lib/log.h"
+#include "lib/meta.h"
 
 namespace {
 __attribute__((constructor(101))) void init() {
@@ -55,7 +54,7 @@ auto main(int argc, char** argv, char** envp) -> int {
     INFO("{}", exec_cmd({"uname", "-a"}));
 
 #ifdef __linux__
-    INFO("{}", exec_cmd({"ldd", "-v"}));
+    INFO("{}", exec_cmd({"ldd", "--version"}));
     INFO("{}", exec_cmd({"gcc", "--version"}));
     INFO("{}", exec_cmd({"lscpu"}));
     INFO("{}", exec_cmd({"cat", "/proc/version"}));

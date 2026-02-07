@@ -1,4 +1,4 @@
-#include "compressor.h"
+#include "lib/compressor.h"
 
 #include <cstdint>
 #include <memory>
@@ -38,7 +38,8 @@ struct Lz4Impl final : Compressor {
 
         // 压缩数据，写入头部之后的空间
         char* compressed_data_ptr = result.data() + sizeof(uint64_t); // NOLINT
-        const int compressed_size = LZ4_compress_default(data.c_str(), compressed_data_ptr, src_size, max_dst_size);
+        const int compressed_size
+            = LZ4_compress_default(data.c_str(), compressed_data_ptr, src_size, max_dst_size);
 
         if (compressed_size <= 0) {
             throw std::runtime_error("LZ4_compress_default failed.");
@@ -73,8 +74,8 @@ struct Lz4Impl final : Compressor {
         std::string result(original_size, '\0');
 
         // 调用解压函数
-        const int decompressed_size
-            = LZ4_decompress_safe(compressed_data_ptr, result.data(), compressed_size, static_cast<int>(original_size));
+        const int decompressed_size = LZ4_decompress_safe(
+            compressed_data_ptr, result.data(), compressed_size, static_cast<int>(original_size));
 
         // 检查解压是否成功
         if (decompressed_size < 0) {
@@ -114,7 +115,8 @@ struct ZstdImpl final : Compressor {
         );
 
         if (ZSTD_isError(compressed_size)) { // NOLINT
-            throw std::runtime_error("Zstd compression failed: " + std::string(ZSTD_getErrorName(compressed_size)));
+            throw std::runtime_error(
+                "Zstd compression failed: " + std::string(ZSTD_getErrorName(compressed_size)));
         }
 
         result.resize(compressed_size);
@@ -138,10 +140,12 @@ struct ZstdImpl final : Compressor {
 
         std::string result(original_size, '\0');
 
-        size_t const decompressed_size = ZSTD_decompress(result.data(), original_size, data.c_str(), data.size());
+        size_t const decompressed_size
+            = ZSTD_decompress(result.data(), original_size, data.c_str(), data.size());
 
         if (ZSTD_isError(decompressed_size)) { // NOLINT
-            throw std::runtime_error("Zstd decompression failed: " + std::string(ZSTD_getErrorName(decompressed_size)));
+            throw std::runtime_error(
+                "Zstd decompression failed: " + std::string(ZSTD_getErrorName(decompressed_size)));
         }
         if (decompressed_size != original_size) {
             throw std::runtime_error("Zstd decompression size mismatch.");

@@ -7,7 +7,7 @@ build:
 	@bazel build --config=asan --config=local //app:usage
 
 build_bm:
-	@bazel build --config=local --config=opt //app:bench_json
+	@bazel build --config=local --config=opt //bench:bench_json
 
 build_pb:
 	@bazel build --config=asan --config=local //app:parameter_pb
