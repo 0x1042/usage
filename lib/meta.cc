@@ -3,6 +3,9 @@
 #include <cstdint>
 #include <filesystem>
 #include <format>
+#include <iomanip>
+#include <sstream>
+#include <unordered_map>
 
 #include "cpuinfo.h"
 

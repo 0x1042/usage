@@ -20,6 +20,9 @@ build --remote_cache_compression
 build --experimental_profile_include_target_label 
 build --experimental_profile_include_primary_output 
 build --compilation_mode=dbg
+build --cxxopt=-stdlib=libc++
+build --linkopt=-stdlib=libc++
+build --linkopt=-lc++abi
 
 build:ci --action_env=CC=/usr/bin/clang-20
 build:ci --action_env=CXX=/usr/bin/clang++-20
