@@ -21,7 +21,7 @@ jobs:
           repository-cache: true
 
       - name: install clang
-        run: sudo apt update && sudo apt install -y clang-20 mold
+        run: sudo apt update && sudo apt install -y clang-20 libc++-20-dev libc++abi-20-dev mold
 
       - name: unittest
         run: |
