@@ -3,7 +3,7 @@
 all: build
 
 build:
-	@bazel build --config=asan --config=local //app:usage
+	@bazel build --config=local //app:usage
 
 build_bm:
 	@bazel build --config=local --config=opt //bench:bench
@@ -19,3 +19,6 @@ clean:
 
 run:
 	@bazel run --config=asan --config=local //app:usage
+
+gen:
+	bazel run @bazel_cc_meta//cc_meta:refresh_all
